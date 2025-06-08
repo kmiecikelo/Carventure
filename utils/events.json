@@ -16,8 +16,9 @@
   {
     "trigger_km": 3000,
     "name": "ulepszenie1",
-    "description": "Znalazłeś bak po drodze! Twój bak ma teraz 20L więcej pojemności.",
-    "tank_upgrade": 20
+    "description": "Znalazłeś bak po drodze! Twój bak ma teraz 20L więcej pojemności. Maksymalna jednorazowa podróż wzrosła o 20km",
+    "tank_upgrade": 20,
+    "maxkm_upgrade": 20
   },
   {
     "trigger_km": 0,

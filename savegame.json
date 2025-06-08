@@ -2,14 +2,16 @@
     "name": "Toyota",
     "model": "Corolla",
     "year": 2002,
-    "przebieg": 3207,
-    "paliwo": 1000000020.0,
-    "pojbak": 1000000020,
+    "przebieg": 50756,
+    "paliwo": 399994919.4,
+    "pojbak": 50000000000000000040,
     "usterki": [],
-    "liczbausterek": 2,
-    "czas_godzin": 380000190.42,
-    "maksymalna_podroz": 2700,
-    "napad1_wydarzyl_sie": true,
-    "napad2_wydarzyl_sie": true,
-    "ulepszenie1_wydarzylo_sie": true
+    "liczbausterek": 4,
+    "czas_godzin": 1013.1199999999999,
+    "maksymalna_podroz": 2000020,
+    "occurred_events": [
+        "napad2",
+        "ulepszenie1",
+        "napad1"
+    ]
 }

@@ -49,6 +49,9 @@ class Car:
                 # Aktualizacja baku
                 if "tank_upgrade" in event:
                     self.pojbak += event["tank_upgrade"]
+                # Aktualizacja maxkm
+                if "maxkm_upgrade" in event:
+                    self.maxkm += event["maxkm_upgrade"]
                 # Dodanie usterek
                 if "damage" in event:
                     for dmg in event["damage"]:
@@ -122,6 +125,7 @@ class Car:
     def statystyki(self):
         print(f"Producent:{self.name} Model: {self.model} Rok Produkcji: {self.year}")
         print(f"Przebieg: {self.przebieg:.2f}km")
+        print(f"Maksymalna podróż: {self.maxkm:.2f}km")
         print(f"Paliwo: {self.paliwo:.2f}L/{self.pojbak:.2f}")
         print(f"Usterki od początku podróży: {self.liczbausterek}")
         print(f"Aktualne usterki: {self.usterki if self.usterki else 'Brak'}")
@@ -141,9 +145,7 @@ class Car:
             "liczbausterek": self.liczbausterek,
             "czas_godzin": self.czas_godzin,
             "maksymalna_podroz": self.maxkm,
-            "napad1_wydarzyl_sie": "napad1" in self.occurred_events,
-            "napad2_wydarzyl_sie": "napad2" in self.occurred_events,
-            "ulepszenie1_wydarzylo_sie": "ulepszenie1" in self.occurred_events,
+            "occurred_events": list(self.occurred_events),
         }
 
     def save(self, filename="savegame.json"):
@@ -165,10 +167,5 @@ class Car:
         car.czas_godzin = data["czas_godzin"]
         car.maxkm = data["maksymalna_podroz"]
         car.occurred_events = set()
-        if data.get("napad1_wydarzyl_sie"):
-            car.occurred_events.add("napad1")
-        if data.get("napad2_wydarzyl_sie"):
-            car.occurred_events.add("napad2")
-        if data.get("ulepszenie1_wydarzylo_sie"):
-            car.occurred_events.add("ulepszenie1")
+        car.occurred_events = set(data.get("occurred_events", []))
         return car
