@@ -1,0 +1,34 @@
+[
+  {
+    "trigger_km": 750,
+    "name": "napad1",
+    "description": "Napastnicy ukradli Ci 10 litrów paliwa i przebili oponę!",
+    "fuel_loss": 10,
+    "damage": ["Przebita opona (napad)"]
+  },
+  {
+    "trigger_km": 1500,
+    "name": "napad2",
+    "description": "Napastnicy ukradli Ci 20 litrów paliwa i rozbili szybę!",
+    "fuel_loss": 20,
+    "damage": ["Rozbita szyba (napad)"]
+  },
+  {
+    "trigger_km": 3000,
+    "name": "ulepszenie1",
+    "description": "Znalazłeś bak po drodze! Twój bak ma teraz 20L więcej pojemności.",
+    "tank_upgrade": 20
+  },
+  {
+    "trigger_km": 0,
+    "name": "losowe_guma",
+    "description": "Złapałeś gumę, musisz to naprawić",
+    "damage": ["Przebita opona"]
+  },
+  {
+    "trigger_km": 0,
+    "name": "losowe_alternator",
+    "description": "Uszkodzony alternator, musisz to naprawić",
+    "damage": ["Uszkodzony alternator"]
+  }
+]
