@@ -1,35 +1,106 @@
 [
   {
-    "trigger_km": 750,
-    "name": "napad1",
-    "description": "Napastnicy ukradli Ci 10 litrów paliwa i przebili oponę!",
-    "fuel_loss": 10,
-    "damage": ["Przebita opona (napad)"]
+    "trigger_km": 500,
+    "trigger_day": 1,
+    "name": "sabotaz1",
+    "description": "Ktoś podłożył gwoździe na drodze! Przebiłeś oponę i straciłeś trochę paliwa.",
+    "fuel_loss": 5,
+    "damage": ["Przebita opona (sabotaż)"]
+  },
+  {
+    "trigger_km": 1000,
+    "trigger_day": 0,
+    "name": "mechanik_naprawa",
+    "description": "Spotkałeś wędrownego mechanika, który za darmo naprawił Twoją furę!",
+    "damage": [],
+    "tank_upgrade": 5,
+    "maxkm_upgrade": 10
   },
   {
     "trigger_km": 1500,
-    "name": "napad2",
-    "description": "Napastnicy ukradli Ci 20 litrów paliwa i rozbili szybę!",
-    "fuel_loss": 20,
-    "damage": ["Rozbita szyba (napad)"]
+    "trigger_day": 2,
+    "name": "napad_paliwo",
+    "description": "Zatrzymali Cię bandyci – zabrali 15L paliwa i uderzyli w karoserię.",
+    "fuel_loss": 15,
+    "damage": ["Wgniecenie drzwi (napad)"]
+  },
+  {
+    "trigger_km": 2000,
+    "trigger_day": 3,
+    "name": "ulepszenie_pojazdu",
+    "description": "Znalazłeś porzucone części – zmodernizowałeś bak i silnik.",
+    "tank_upgrade": 15,
+    "maxkm_upgrade": 30
+  },
+  {
+    "trigger_km": 2500,
+    "trigger_day": 4,
+    "name": "burza_piorun",
+    "description": "Burza z piorunami! Samochód został lekko uszkodzony przez wyładowania.",
+    "damage": ["Zwarcie instalacji elektrycznej"]
   },
   {
     "trigger_km": 3000,
-    "name": "ulepszenie1",
-    "description": "Znalazłeś bak po drodze! Twój bak ma teraz 20L więcej pojemności. Maksymalna jednorazowa podróż wzrosła o 20km",
+    "trigger_day": 5,
+    "name": "tajemniczy_garaz",
+    "description": "Wjechałeś do tajemniczego garażu. Ktoś bez słowa naprawił Ci furę i ulepszył bak!",
     "tank_upgrade": 20,
-    "maxkm_upgrade": 20
+    "maxkm_upgrade": 20,
+    "damage": []
   },
   {
     "trigger_km": 0,
-    "name": "losowe_guma",
-    "description": "Złapałeś gumę, musisz to naprawić",
-    "damage": ["Przebita opona"]
+    "name": "awaria_random",
+    "description": "Coś się niespodziewanie zepsuło podczas jazdy!",
+    "damage": ["Uszkodzona chłodnica"],
+    "repeatable": true,
+    "chance": 0.1
   },
   {
     "trigger_km": 0,
-    "name": "losowe_alternator",
-    "description": "Uszkodzony alternator, musisz to naprawić",
-    "damage": ["Uszkodzony alternator"]
+    "name": "bonus_random",
+    "description": "Znalazłeś porzucone kanistry paliwa przy drodze!",
+    "fuel_loss": -10,
+    "repeatable": true,
+    "chance": 0.15
+  },
+  {
+    "trigger_km": 0,
+    "name": "deszczowy_dzien",
+    "description": "Złapała Cię ulewa – jazda była trudniejsza, ale nic się nie stało.",
+    "repeatable": true,
+    "chance": 0.2
+  },
+  {
+    "trigger_km": 3500,
+    "trigger_day": 6,
+    "name": "spotkanie_podroznikow",
+    "description": "Spotkałeś innych podróżników – wymieniliście się częściami.",
+    "tank_upgrade": 10,
+    "damage": []
+  },
+  {
+    "trigger_km": 4000,
+    "trigger_day": 7,
+    "name": "katastrofa_maly_wypadek",
+    "description": "Zderzyłeś się z sarną! Auto zostało uszkodzone.",
+    "damage": ["Pęknięty zderzak", "Zgięta maska"]
+  },
+  {
+    "trigger_km": 4500,
+    "trigger_day": 8,
+    "name": "stara_stacja",
+    "description": "Na starej stacji benzynowej zatankowałeś tanio i do pełna!",
+    "tank_upgrade": 5,
+    "fuel_loss": -999
+  },
+  {
+    "trigger_km": 5000,
+    "trigger_day": 9,
+    "name": "epicki_moment",
+    "description": "Dotarłeś do punktu przełomowego – Twoje auto przeszło metamorfozę!",
+    "tank_upgrade": 25,
+    "maxkm_upgrade": 50,
+    "damage": []
   }
 ]
