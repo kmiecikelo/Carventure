@@ -2,6 +2,8 @@ import time
 import json
 import random
 
+from core.save import save_game, load_game
+
 
 class Car:
     def __init__(self, name, model, year, przebieg, paliwo, pojbak, events_file="utils/events.json"):
@@ -14,6 +16,7 @@ class Car:
         self.usterki = []
         self.liczbausterek = 0
         self.czas_godzin = 8
+        self.maxkm = 200
 
         # Wczytanie zdarzeń z pliku JSON
         with open(events_file, "r", encoding="utf-8") as f:
@@ -74,8 +77,8 @@ class Car:
             print(f"Usterka: {self.usterki}")
             return
 
-        if km > 500:
-            print("Nie możesz jechać dalej niż 500 km na raz!")
+        if km > self.maxkm:
+            print(f"Nie możesz jechać dalej niż {self.maxkm} km na raz!")
             return
 
         if self.paliwo < zuzycie:
@@ -125,3 +128,47 @@ class Car:
         print(f"Aktualna godzina: ", end="")
         self.pokaz_czas_dnia()
         print()
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "model": self.model,
+            "year": self.year,
+            "przebieg": self.przebieg,
+            "paliwo": self.paliwo,
+            "pojbak": self.pojbak,
+            "usterki": self.usterki,
+            "liczbausterek": self.liczbausterek,
+            "czas_godzin": self.czas_godzin,
+            "maksymalna_podroz": self.maxkm,
+            "napad1_wydarzyl_sie": "napad1" in self.occurred_events,
+            "napad2_wydarzyl_sie": "napad2" in self.occurred_events,
+            "ulepszenie1_wydarzylo_sie": "ulepszenie1" in self.occurred_events,
+        }
+
+    def save(self, filename="savegame.json"):
+        save_game(self.to_dict(), filename)
+
+    @classmethod
+    def load(cls, filename="savegame.json"):
+        data = load_game(filename)
+        car = cls(
+            data["name"],
+            data["model"],
+            data["year"],
+            data["przebieg"],
+            data["paliwo"],
+            data["pojbak"],
+        )
+        car.usterki = data["usterki"]
+        car.liczbausterek = data["liczbausterek"]
+        car.czas_godzin = data["czas_godzin"]
+        car.maxkm = data["maksymalna_podroz"]
+        car.occurred_events = set()
+        if data.get("napad1_wydarzyl_sie"):
+            car.occurred_events.add("napad1")
+        if data.get("napad2_wydarzyl_sie"):
+            car.occurred_events.add("napad2")
+        if data.get("ulepszenie1_wydarzylo_sie"):
+            car.occurred_events.add("ulepszenie1")
+        return car

@@ -10,6 +10,8 @@ def main():
         print("jazda / jedź – jedź")
         print("tankuj – zatankuj")
         print("napraw – napraw samochód")
+        print("zapisz – zapisz stan gry")
+        print("wczytaj – wczytaj stan gry")
         print("wyjście / koniec / exit – zakończ program")
 
         wybor = input("Wybierz opcję: ").strip().lower()
@@ -24,6 +26,10 @@ def main():
             pojazd.tankuj(litry)
         elif wybor in ["napraw", "mechanik"]:
             pojazd.napraw()
+        elif wybor == "zapisz":
+            pojazd.save()
+        elif wybor == "wczytaj":
+            pojazd = Car.load()
         elif wybor in ["wyjście", "exit", "koniec"]:
             print("Zamykanie programu...")
             break
