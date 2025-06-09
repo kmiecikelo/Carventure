@@ -23,7 +23,7 @@
       "name": "awaria_elektryki",
       "description": "Problemy z elektryką! Pojazd może się niespodziewanie zatrzymać.",
       "trigger_km": 500,
-      "chance": 0.1,
+      "chance": 0.3,
       "repeatable": true,
       "debuffs": [
         { "type": "max_range", "value": 0.5, "description": "Znacznie zmniejszony zasięg (awaria elektryki)" }

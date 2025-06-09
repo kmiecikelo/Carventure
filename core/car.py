@@ -16,6 +16,7 @@ class Car:
         self.pojbak = pojbak
         self.debuffs = []  # Lista aktywnych debuffów
         self.buffs = []
+        self.event_cooldowns = {}  # Słownik przechowujący cooldowny zdarzeń
         self.liczbausterek = 0
         self.czas_dni = 1
         self.czas_godzin = 6
@@ -70,9 +71,17 @@ class Car:
     def sprawdz_zdarzenia(self):
         for event in self.events:
             name = event.get("name")
+            # Pomijamy niepowtarzalne zdarzenia, które już wystąpiły
             if not event.get("repeatable", False) and name in self.occurred_events:
                 continue
 
+            # Sprawdzamy cooldown dla zdarzeń powtarzalnych
+            if event.get("repeatable", False):
+                last_occurred = self.event_cooldowns.get(name, 0)
+                if self.przebieg - last_occurred < 350:  # Cooldown 350 km
+                    continue
+
+            # Sprawdzamy, czy warunki zdarzenia są spełnione
             if (self.przebieg >= event.get("trigger_km", 0) and
                     self.czas_dni >= event.get("trigger_day", 0)):
 
@@ -89,6 +98,8 @@ class Car:
 
                 if not event.get("repeatable", False):
                     self.occurred_events.add(name)
+                else:
+                    self.event_cooldowns[name] = self.przebieg  # Zapamiętujemy kiedy wystąpiło
                 return True
         return False
 
@@ -189,7 +200,7 @@ class Car:
         do_tankowania = min(litry, self.pojbak - self.paliwo)
 
         print("\nTankujesz furkę...")
-        time.sleep(0.5)
+        time.sleep(1.5)
 
         self.paliwo += do_tankowania
         self.dodaj_czas(do_tankowania / 2.5)
@@ -215,6 +226,8 @@ class Car:
         if self.debuffs:
             self.pakiety_naprawcze -= 1
             self.debuffs = []
+            print(f"Naprawiam furkę...")
+            time.sleep(2)
             print(f"Użyto pakietu naprawczego. Naprawiono samochód. Pozostało {self.pakiety_naprawcze} pakietów.")
             return True
 
@@ -256,6 +269,7 @@ class Car:
             "pojbak": self.pojbak,
             "debuffs": self.debuffs,
             "buffs": self.buffs,
+            "event_cooldowns": self.event_cooldowns,
             "liczbausterek": self.liczbausterek,
             "czas_dni": self.czas_dni,
             "czas_godzin": self.czas_godzin,
@@ -283,6 +297,7 @@ class Car:
         )
         car.debuffs = data["debuffs"]
         car.buffs = data["buffs"]
+        car.event_cooldowns = data.get("event_cooldowns", {})
         car.liczbausterek = data["liczbausterek"]
         car.czas_dni = data["czas_dni"]
         car.czas_godzin = data["czas_godzin"]
