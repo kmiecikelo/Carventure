@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Stacja benzynowa",
+    "type": "stacja",
+    "description": "Stara stacja z jednym dystrybutorem.",
+    "options": ["tankowanie"]
+  },
+  {
+    "name": "Warsztat",
+    "type": "warsztat",
+    "description": "Mały warsztat w lesie. Pachnie ropą.",
+    "options": ["naprawa"]
+  },
+  {
+    "name": "Pustkowie",
+    "type": "nic",
+    "description": "Tylko kurz i wiatr...",
+    "options": []
+  },
+  {
+    "name": "Miasto",
+    "type": "miasto",
+    "description": "Ruchliwe miasto z wieloma możliwościami.",
+    "options": ["tankowanie", "naprawa", "handel"]
+  }
+]
