@@ -1,3 +1,5 @@
+import os
+import sys
 import time
 import json
 import random
@@ -24,7 +26,8 @@ class Car:
         self.kasa = 500  # zł
         self.pakiety_naprawcze = 1
 
-        with open(events_file, "r", encoding="utf-8") as f:
+        path = resource_path(events_file)
+        with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
             self.events = data.get("events", [])
 
@@ -308,9 +311,16 @@ class Lokacja:
         else:
             print("Nie ma tu nic ciekawego...\n")
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS  # używane przez PyInstaller
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 def wygeneruj_lokacje():
-    with open("utils/locations.json", "r", encoding="utf-8") as f:
+    path = resource_path("utils/locations.json")
+    with open(path, "r", encoding="utf-8") as f:
         dane_lokacji = json.load(f)
 
     losowa_lokacja = random.choice(dane_lokacji)
