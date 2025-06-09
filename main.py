@@ -29,7 +29,7 @@ def main():
     show_logo()
     pojazd = try_load_game()
     if not pojazd:
-        pojazd = Car("Toyota", "Corolla", 2002, 500, 45, 50)
+        pojazd = Car("Briska", "Compact", 1990, 500, 45, 50)
 
     while True:
         print("\n--- MENU ---")

@@ -13,6 +13,7 @@ class Car:
         self.paliwo = paliwo
         self.pojbak = pojbak
         self.debuffs = []  # Lista aktywnych debuffów
+        self.buffs = []
         self.liczbausterek = 0
         self.czas_dni = 1
         self.czas_godzin = 6
@@ -42,19 +43,25 @@ class Car:
             self.czas_godzin %= 24
 
     def get_current_maxkm(self):
-        """Oblicza aktualny maksymalny zasięg uwzględniając debuffy"""
+        """Oblicza aktualny maksymalny zasięg uwzględniając debuffy i buffy"""
         multiplier = 1.0
         for debuff in self.debuffs:
             if debuff["type"] == "max_range":
                 multiplier *= debuff["value"]
+        for buff in self.buffs:
+            if buff["type"] == "max_range":
+                multiplier *= buff["value"]
         return self.base_maxkm * multiplier
 
     def get_current_fuel_consumption(self):
-        """Oblicza aktualne spalanie uwzględniając debuffy"""
+        """Oblicza aktualne spalanie uwzględniając debuffy i buffy"""
         multiplier = 1.0
         for debuff in self.debuffs:
             if debuff["type"] == "fuel_consumption":
                 multiplier *= debuff["value"]
+        for buff in self.buffs:
+            if buff["type"] == "fuel_consumption":
+                multiplier *= buff["value"]
         return self.base_fuel_consumption * multiplier
 
     def sprawdz_zdarzenia(self):
@@ -74,6 +81,8 @@ class Car:
                 for debuff in event.get("debuffs", []):
                     self.debuffs.append(debuff)
                     self.liczbausterek += 1
+                for buff in event.get("buffs", []):
+                    self.buffs.append(buff)
 
                 if not event.get("repeatable", False):
                     self.occurred_events.add(name)
@@ -90,6 +99,8 @@ class Car:
                     for debuff in event.get("debuffs", []):
                         self.debuffs.append(debuff)
                         self.liczbausterek += 1
+                    for buff in event.get("buffs", []):
+                        self.buffs.append(buff)
                     if not event.get("repeatable", False):
                         self.occurred_events.add(event["name"])
 
@@ -205,12 +216,21 @@ class Car:
             return True
 
     def statystyki(self):
-        print(f"Producent: {self.name}, Model: {self.model}, Rok: {self.year}")
-        print(f"Przebieg: {self.przebieg:.2f}km")
-        print(f"Maksymalna podróż: {self.get_current_maxkm():.2f}km")
-        print(f"Paliwo: {self.paliwo:.2f}L/{self.pojbak:.2f}L")
-        print(f"Spalanie: {self.get_current_fuel_consumption() * 100:.1f}L/100km")
-        print(f"Problemy od początku podróży: {self.liczbausterek}")
+        print(f"\n📊 {self.name} {self.model} ({self.year})")
+        print(f"🔧 Przebieg: {self.przebieg} km")
+        print(f"⛽ Paliwo: {self.paliwo:.1f} / {self.pojbak} L")
+        print(f"🚀 Zasięg: {self.get_current_maxkm()} km")
+        print(f"🔥 Spalanie: {self.get_current_fuel_consumption() * 100:.1f}L/100km")
+        print(f"🧰 Pakiety naprawcze: {self.pakiety_naprawcze}")
+        print(f"💰 Kasa: {self.kasa} zł")
+        print(f"🛠️ Usterki: {self.liczbausterek}")
+        print(f"🌤️ Dzień {self.czas_dni}, godzina {self.czas_godzin}:00")
+        if self.buffs:
+            print("Aktywne bonusy:")
+            for buff in self.buffs:
+                print(f"- {buff['description']}")
+        else:
+            print("Aktywne bonusy: Brak")
 
         if self.debuffs:
             print("Aktualne problemy:")
@@ -232,6 +252,7 @@ class Car:
             "paliwo": self.paliwo,
             "pojbak": self.pojbak,
             "debuffs": self.debuffs,
+            "buffs": self.buffs,
             "liczbausterek": self.liczbausterek,
             "czas_dni": self.czas_dni,
             "czas_godzin": self.czas_godzin,
@@ -258,6 +279,7 @@ class Car:
             data["pojbak"],
         )
         car.debuffs = data["debuffs"]
+        car.buffs = data["buffs"]
         car.liczbausterek = data["liczbausterek"]
         car.czas_dni = data["czas_dni"]
         car.czas_godzin = data["czas_godzin"]

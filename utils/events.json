@@ -2,11 +2,13 @@
   "events": [
     {
       "name": "przebita_opona",
-      "description": "Przebita opona! Musisz zwolnić i jechać ostrożnie.",
+      "description": "Przebita opona! Musisz zwolnić i jechać ostrożnie. Przy postoju wyczyściłeś szybę.",
       "trigger_km": 150,
       "debuffs": [
-        { "type": "fuel_consumption", "value": 1.3, "description": "Zwiększone spalanie (przebita opona)" },
-        { "type": "max_range", "value": 0.8, "description": "Zmniejszony zasięg (ostrożna jazda)" }
+        { "type": "fuel_consumption", "value": 1.3, "description": "Zwiększone spalanie (przebita opona)" }
+      ],
+      "buffs": [
+        { "type": "max_range", "value": 1.2, "description": "+20% zasięgu" }
       ]
     },
     {
