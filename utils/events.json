@@ -1,106 +1,228 @@
-[
-  {
-    "trigger_km": 500,
-    "trigger_day": 1,
-    "name": "sabotaz1",
-    "description": "Ktoś podłożył gwoździe na drodze! Przebiłeś oponę i straciłeś trochę paliwa.",
-    "fuel_loss": 5,
-    "damage": ["Przebita opona (sabotaż)"]
-  },
-  {
-    "trigger_km": 1000,
-    "trigger_day": 0,
-    "name": "mechanik_naprawa",
-    "description": "Spotkałeś wędrownego mechanika, który za darmo naprawił Twoją furę!",
-    "damage": [],
-    "tank_upgrade": 5,
-    "maxkm_upgrade": 10
-  },
-  {
-    "trigger_km": 1500,
-    "trigger_day": 2,
-    "name": "napad_paliwo",
-    "description": "Zatrzymali Cię bandyci – zabrali 15L paliwa i uderzyli w karoserię.",
-    "fuel_loss": 15,
-    "damage": ["Wgniecenie drzwi (napad)"]
-  },
-  {
-    "trigger_km": 2000,
-    "trigger_day": 3,
-    "name": "ulepszenie_pojazdu",
-    "description": "Znalazłeś porzucone części – zmodernizowałeś bak i silnik.",
-    "tank_upgrade": 15,
-    "maxkm_upgrade": 30
-  },
-  {
-    "trigger_km": 2500,
-    "trigger_day": 4,
-    "name": "burza_piorun",
-    "description": "Burza z piorunami! Samochód został lekko uszkodzony przez wyładowania.",
-    "damage": ["Zwarcie instalacji elektrycznej"]
-  },
-  {
-    "trigger_km": 3000,
-    "trigger_day": 5,
-    "name": "tajemniczy_garaz",
-    "description": "Wjechałeś do tajemniczego garażu. Ktoś bez słowa naprawił Ci furę i ulepszył bak!",
-    "tank_upgrade": 20,
-    "maxkm_upgrade": 20,
-    "damage": []
-  },
-  {
-    "trigger_km": 0,
-    "name": "awaria_random",
-    "description": "Coś się niespodziewanie zepsuło podczas jazdy!",
-    "damage": ["Uszkodzona chłodnica"],
-    "repeatable": true,
-    "chance": 0.1
-  },
-  {
-    "trigger_km": 0,
-    "name": "bonus_random",
-    "description": "Znalazłeś porzucone kanistry paliwa przy drodze!",
-    "fuel_loss": -10,
-    "repeatable": true,
-    "chance": 0.15
-  },
-  {
-    "trigger_km": 0,
-    "name": "deszczowy_dzien",
-    "description": "Złapała Cię ulewa – jazda była trudniejsza, ale nic się nie stało.",
-    "repeatable": true,
-    "chance": 0.2
-  },
-  {
-    "trigger_km": 3500,
-    "trigger_day": 6,
-    "name": "spotkanie_podroznikow",
-    "description": "Spotkałeś innych podróżników – wymieniliście się częściami.",
-    "tank_upgrade": 10,
-    "damage": []
-  },
-  {
-    "trigger_km": 4000,
-    "trigger_day": 7,
-    "name": "katastrofa_maly_wypadek",
-    "description": "Zderzyłeś się z sarną! Auto zostało uszkodzone.",
-    "damage": ["Pęknięty zderzak", "Zgięta maska"]
-  },
-  {
-    "trigger_km": 4500,
-    "trigger_day": 8,
-    "name": "stara_stacja",
-    "description": "Na starej stacji benzynowej zatankowałeś tanio i do pełna!",
-    "tank_upgrade": 5,
-    "fuel_loss": -999
-  },
-  {
-    "trigger_km": 5000,
-    "trigger_day": 9,
-    "name": "epicki_moment",
-    "description": "Dotarłeś do punktu przełomowego – Twoje auto przeszło metamorfozę!",
-    "tank_upgrade": 25,
-    "maxkm_upgrade": 50,
-    "damage": []
-  }
-]
+{
+  "events": [
+    {
+      "name": "przebita_opona",
+      "description": "Przebita opona! Musisz zwolnić i jechać ostrożnie.",
+      "trigger_km": 150,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.3, "description": "Zwiększone spalanie (przebita opona)" },
+        { "type": "max_range", "value": 0.8, "description": "Zmniejszony zasięg (ostrożna jazda)" }
+      ]
+    },
+    {
+      "name": "uszkodzony_filtr",
+      "description": "Zapchany filtr powietrza! Silnik pracuje mniej efektywnie.",
+      "trigger_km": 300,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.5, "description": "Znacznie zwiększone spalanie (zapchany filtr)" }
+      ]
+    },
+    {
+      "name": "awaria_elektryki",
+      "description": "Problemy z elektryką! Pojazd może się niespodziewanie zatrzymać.",
+      "trigger_km": 500,
+      "chance": 0.1,
+      "repeatable": true,
+      "debuffs": [
+        { "type": "max_range", "value": 0.5, "description": "Znacznie zmniejszony zasięg (awaria elektryki)" }
+      ]
+    },
+    {
+      "name": "silny_wiatr",
+      "description": "Silny przeciwny wiatr zwiększa opór powietrza.",
+      "trigger_km": 120,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.2, "description": "Zwiększone spalanie (wiatr)" }
+      ]
+    },
+    {
+      "name": "lejący_deszcz",
+      "description": "Lejący deszcz! Trzeba jechać wolniej.",
+      "trigger_km": 200,
+      "debuffs": [
+        { "type": "max_range", "value": 0.85, "description": "Mniejszy zasięg (deszczowa jazda)" }
+      ]
+    },
+    {
+      "name": "ulewa",
+      "description": "Ulewny deszcz zalewa drogę.",
+      "trigger_km": 600,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.4, "description": "Zwiększone spalanie (ulewa)" }
+      ]
+    },
+    {
+      "name": "przegrzany_silnik",
+      "description": "Silnik się przegrzewa. Musisz zwolnić.",
+      "trigger_km": 700,
+      "debuffs": [
+        { "type": "max_range", "value": 0.75, "description": "Ograniczony zasięg (przegrzanie silnika)" }
+      ]
+    },
+    {
+      "name": "brak_oleju",
+      "description": "Brakuje oleju! To może uszkodzić silnik.",
+      "trigger_km": 850,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.6, "description": "Zwiększone spalanie (brak oleju)" }
+      ]
+    },
+    {
+      "name": "slaba_bateria",
+      "description": "Akumulator traci moc.",
+      "trigger_km": 900,
+      "debuffs": [
+        { "type": "max_range", "value": 0.7, "description": "Zasięg ograniczony (słaba bateria)" }
+      ]
+    },
+    {
+      "name": "dziurawa_droga",
+      "description": "Dziurawa droga wymusza wolniejszą jazdę.",
+      "trigger_km": 950,
+      "debuffs": [
+        { "type": "max_range", "value": 0.9, "description": "Mniejszy zasięg (dziurawa droga)" }
+      ]
+    },
+    {
+      "name": "silne_upaly",
+      "description": "Silne upały obciążają system chłodzenia.",
+      "trigger_km": 1000,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.3, "description": "Zwiększone spalanie (klimatyzacja i chłodzenie)" }
+      ]
+    },
+    {
+      "name": "gradobicie",
+      "description": "Grad zmusza do natychmiastowego zatrzymania.",
+      "trigger_km": 1050,
+      "chance": 0.2,
+      "debuffs": [
+        { "type": "max_range", "value": 0.6, "description": "Konieczność zatrzymania (gradobicie)" }
+      ]
+    },
+    {
+      "name": "blokada_drogi",
+      "description": "Zablokowana droga. Objazd!",
+      "trigger_km": 1100,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.2, "description": "Objazd zwiększa spalanie" }
+      ]
+    },
+    {
+      "name": "kontrola_policyjna",
+      "description": "Zatrzymanie do kontroli.",
+      "trigger_km": 1150,
+      "chance": 0.15,
+      "debuffs": [
+        { "type": "max_range", "value": 0.95, "description": "Opóźnienie trasy" }
+      ]
+    },
+    {
+      "name": "zepsute_wycieraczki",
+      "description": "Brak wycieraczek w deszczu.",
+      "trigger_km": 1200,
+      "debuffs": [
+        { "type": "max_range", "value": 0.8, "description": "Zasięg zmniejszony (słaba widoczność)" }
+      ]
+    },
+    {
+      "name": "slabe_oswietlenie",
+      "description": "Problemy ze światłami.",
+      "trigger_km": 1250,
+      "debuffs": [
+        { "type": "max_range", "value": 0.9, "description": "Ograniczona widoczność nocą" }
+      ]
+    },
+    {
+      "name": "zanieczyszczona_szyba",
+      "description": "Brudna szyba zmniejsza widoczność.",
+      "trigger_km": 1300,
+      "debuffs": [
+        { "type": "max_range", "value": 0.85, "description": "Zmniejszony zasięg (brudna szyba)" }
+      ]
+    },
+    {
+      "name": "wyciek_paliwa",
+      "description": "Wyciek paliwa! Strata zasobów.",
+      "trigger_km": 1350,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 2.0, "description": "Poważny wyciek paliwa" }
+      ]
+    },
+    {
+      "name": "poślizg",
+      "description": "Poślizg na mokrej nawierzchni!",
+      "trigger_km": 1400,
+      "chance": 0.05,
+      "debuffs": [
+        { "type": "max_range", "value": 0.6, "description": "Zahamowanie jazdy (poślizg)" }
+      ]
+    },
+    {
+      "name": "brak_nawigacji",
+      "description": "Utracona nawigacja GPS.",
+      "trigger_km": 1450,
+      "debuffs": [
+        { "type": "max_range", "value": 0.9, "description": "Objazdy przez brak nawigacji" }
+      ]
+    },
+    {
+      "name": "porywisty_wiatr",
+      "description": "Porywisty boczny wiatr.",
+      "trigger_km": 1500,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.1, "description": "Większe opory boczne" }
+      ]
+    },
+    {
+      "name": "popsuty_klakson",
+      "description": "Awaria klaksonu – ryzyko na drodze.",
+      "trigger_km": 1550,
+      "debuffs": [
+        { "type": "max_range", "value": 0.95, "description": "Zmniejszona zdolność reagowania" }
+      ]
+    },
+    {
+      "name": "kurz_na_drodze",
+      "description": "Kurz ogranicza widoczność.",
+      "trigger_km": 1600,
+      "debuffs": [
+        { "type": "max_range", "value": 0.85, "description": "Zmniejszony zasięg (pył drogowy)" }
+      ]
+    },
+    {
+      "name": "wysoka_wilgotnosc",
+      "description": "Wilgoć utrudnia pracę silnika.",
+      "trigger_km": 1650,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.15, "description": "Wilgoć wpływa na spalanie" }
+      ]
+    },
+    {
+      "name": "niskie_cisnienie_opon",
+      "description": "Zbyt niskie ciśnienie w oponach wpływa na ekonomikę jazdy.",
+      "trigger_km": 1700,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.25, "description": "Większe spalanie (ciśnienie w oponach)" }
+      ]
+    },
+    {
+      "name": "zablokowany_uklad_kierowniczy",
+      "description": "Problem z układem kierowniczym! Jazda staje się trudniejsza.",
+      "trigger_km": 1750,
+      "chance": 0.05,
+      "repeatable": true,
+      "debuffs": [
+        { "type": "max_range", "value": 0.7, "description": "Ograniczony zasięg (problemy z kierowaniem)" }
+      ]
+    },
+    {
+      "name": "zapieczone_hamulce",
+      "description": "Hamulce się przegrzewają i nie działają optymalnie.",
+      "trigger_km": 1800,
+      "debuffs": [
+        { "type": "fuel_consumption", "value": 1.1, "description": "Zwiększone opory ruchu" }
+      ]
+    }
+  ]
+}

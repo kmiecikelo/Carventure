@@ -35,8 +35,9 @@ def main():
         print("\n--- MENU ---")
         print("[1] Statystyki")
         print("[2] Jazda")
-        print("[3] Zapisz grę")
-        print("[4] Wczytaj zapis")
+        print("[3] Napraw")
+        print("[4] Zapisz grę")
+        print("[5] Wczytaj zapis")
         print("[0] Wyjście")
 
         wybor = input("Wybierz opcję: ").strip().lower()
@@ -49,10 +50,12 @@ def main():
                 pojazd.jedz(km)
             except ValueError:
                 print("❌ Podaj poprawną liczbę kilometrów.")
-        elif wybor in ["3", "zapisz"]:
+        elif wybor in ["3", "napraw"]:
+            pojazd.use_repair_kit()
+        elif wybor in ["4", "zapisz"]:
             pojazd.save()
             print("💾 Gra została zapisana.")
-        elif wybor in ["4", "wczytaj"]:
+        elif wybor in ["5", "wczytaj"]:
             try:
                 pojazd = Car.load()
                 print("✅ Gra została wczytana.")

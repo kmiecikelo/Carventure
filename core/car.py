@@ -1,7 +1,6 @@
 import time
 import json
 import random
-
 from core.save import save_game, load_game
 
 
@@ -13,16 +12,20 @@ class Car:
         self.przebieg = przebieg
         self.paliwo = paliwo
         self.pojbak = pojbak
-        self.usterki = []
+        self.debuffs = []  # Lista aktywnych debuffów
         self.liczbausterek = 0
         self.czas_dni = 1
         self.czas_godzin = 6
-        self.maxkm = 200
+        self.base_maxkm = 200  # Bazowy maksymalny zasięg
+        self.base_fuel_consumption = 0.1  # Bazowe spalanie (L/km)
         self.ostatni_postoj = 0
         self.odstep_postoj = random.randint(50, 70)
+        self.kasa = 500  # zł
+        self.pakiety_naprawcze = 1
 
         with open(events_file, "r", encoding="utf-8") as f:
-            self.events = json.load(f)
+            data = json.load(f)
+            self.events = data.get("events", [])
 
         self.occurred_events = set()
 
@@ -38,6 +41,22 @@ class Car:
             self.czas_dni += int(self.czas_godzin // 24)
             self.czas_godzin %= 24
 
+    def get_current_maxkm(self):
+        """Oblicza aktualny maksymalny zasięg uwzględniając debuffy"""
+        multiplier = 1.0
+        for debuff in self.debuffs:
+            if debuff["type"] == "max_range":
+                multiplier *= debuff["value"]
+        return self.base_maxkm * multiplier
+
+    def get_current_fuel_consumption(self):
+        """Oblicza aktualne spalanie uwzględniając debuffy"""
+        multiplier = 1.0
+        for debuff in self.debuffs:
+            if debuff["type"] == "fuel_consumption":
+                multiplier *= debuff["value"]
+        return self.base_fuel_consumption * multiplier
+
     def sprawdz_zdarzenia(self):
         for event in self.events:
             name = event.get("name")
@@ -50,10 +69,10 @@ class Car:
                 print(f"\n💥 {event['description']}")
                 self.paliwo = max(0, self.paliwo - event.get("fuel_loss", 0))
                 self.pojbak += event.get("tank_upgrade", 0)
-                self.maxkm += event.get("maxkm_upgrade", 0)
+                self.base_maxkm += event.get("maxkm_upgrade", 0)
 
-                for dmg in event.get("damage", []):
-                    self.usterki.append(dmg)
+                for debuff in event.get("debuffs", []):
+                    self.debuffs.append(debuff)
                     self.liczbausterek += 1
 
                 if not event.get("repeatable", False):
@@ -68,8 +87,8 @@ class Car:
                     if not event.get("repeatable", False) and event["name"] in self.occurred_events:
                         continue
                     print(f"🚨 {event['description']}")
-                    for dmg in event.get("damage", []):
-                        self.usterki.append(dmg)
+                    for debuff in event.get("debuffs", []):
+                        self.debuffs.append(debuff)
                         self.liczbausterek += 1
                     if not event.get("repeatable", False):
                         self.occurred_events.add(event["name"])
@@ -108,14 +127,18 @@ class Car:
                 print("Nieprawidłowy wybór.")
 
     def jedz(self, km):
-        zuzycie = km * 0.1
-        if self.usterki:
-            print("Zanim pojedziesz musisz naprawić swoją furkę!\n")
-            print(f"Usterki: {self.usterki}")
-            return
+        current_maxkm = self.get_current_maxkm()
+        current_consumption = self.get_current_fuel_consumption()
+        zuzycie = km * current_consumption
 
-        if km > self.maxkm:
-            print(f"Nie możesz jechać dalej niż {self.maxkm} km na raz!")
+        if self.debuffs:
+            print("\n⚠️ Uwaga! Samochód ma następujące problemy:")
+            for debuff in self.debuffs:
+                print(f"- {debuff['description']}")
+            print()
+
+        if km > current_maxkm:
+            print(f"Nie możesz jechać dalej niż {current_maxkm:.2f} km na raz!")
             return
 
         if self.paliwo < zuzycie:
@@ -127,7 +150,7 @@ class Car:
         self.przebieg += km
         self.dodaj_czas(km / 50)
 
-        print(f"Przejechałeś {km:.2f}km i zużyłeś {zuzycie:.2f}L")
+        print(f"Przejechałeś {km:.2f}km i zużyłeś {zuzycie:.2f}L (spalanie: {current_consumption * 100:.1f}L/100km)")
         print(f"Aktualny przebieg: {self.przebieg:.2f}km")
         print(f"Paliwo: {self.paliwo:.2f}L/{self.pojbak:.2f}L")
         time.sleep(0.5)
@@ -140,7 +163,6 @@ class Car:
             self.interakcja_z_lokacja(lokacja)
             self.ostatni_postoj = self.przebieg
             self.odstep_postoj = random.randint(50, 70)
-
 
     def tankuj(self, litry):
         if self.paliwo >= self.pojbak:
@@ -161,21 +183,42 @@ class Car:
         print(f"Zatankowałeś {do_tankowania:.2f}L. Stan: {self.paliwo:.2f}/{self.pojbak:.2f}L\n")
 
     def napraw(self):
-        if self.usterki:
-            print("Naprawiam usterki...")
+        if self.debuffs:
+            print("Naprawiam problemy...")
             time.sleep(2)
-            self.usterki = []
-            print("Wszystkie usterki zostały naprawione.\n")
+            self.debuffs = []
+            print("Wszystkie problemy zostały naprawione.\n")
         else:
             print("Nie ma nic do naprawy.\n")
+
+    def use_repair_kit(self):
+        if self.pakiety_naprawcze <= 0:
+            print("Brak pakietów naprawczych!")
+            return False
+        if not self.debuffs:
+            print("Pojazd jest już w pełni sprawny.")
+            return False
+        if self.debuffs:
+            self.pakiety_naprawcze -= 1
+            self.debuffs = []
+            print(f"Użyto pakietu naprawczego. Naprawiono samochód. Pozostało {self.pakiety_naprawcze} pakietów.")
+            return True
 
     def statystyki(self):
         print(f"Producent: {self.name}, Model: {self.model}, Rok: {self.year}")
         print(f"Przebieg: {self.przebieg:.2f}km")
-        print(f"Maksymalna podróż: {self.maxkm:.2f}km")
+        print(f"Maksymalna podróż: {self.get_current_maxkm():.2f}km")
         print(f"Paliwo: {self.paliwo:.2f}L/{self.pojbak:.2f}L")
-        print(f"Usterki od początku podróży: {self.liczbausterek}")
-        print(f"Aktualne usterki: {self.usterki if self.usterki else 'Brak'}")
+        print(f"Spalanie: {self.get_current_fuel_consumption() * 100:.1f}L/100km")
+        print(f"Problemy od początku podróży: {self.liczbausterek}")
+
+        if self.debuffs:
+            print("Aktualne problemy:")
+            for debuff in self.debuffs:
+                print(f"- {debuff['description']}")
+        else:
+            print("Aktualne problemy: Brak")
+
         print(f"Aktualna godzina: ", end="")
         self.pokaz_czas_dnia()
         print()
@@ -188,13 +231,16 @@ class Car:
             "przebieg": self.przebieg,
             "paliwo": self.paliwo,
             "pojbak": self.pojbak,
-            "usterki": self.usterki,
+            "debuffs": self.debuffs,
             "liczbausterek": self.liczbausterek,
             "czas_dni": self.czas_dni,
             "czas_godzin": self.czas_godzin,
-            "maksymalna_podroz": self.maxkm,
+            "base_maxkm": self.base_maxkm,
+            "base_fuel_consumption": self.base_fuel_consumption,
             "occurred_events": list(self.occurred_events),
             "ostatni_postoj": self.ostatni_postoj,
+            "kasa": self.kasa,
+            "pakiety_naprawcze": self.pakiety_naprawcze,
         }
 
     def save(self, filename="savegame.json"):
@@ -211,14 +257,18 @@ class Car:
             data["paliwo"],
             data["pojbak"],
         )
-        car.usterki = data["usterki"]
+        car.debuffs = data["debuffs"]
         car.liczbausterek = data["liczbausterek"]
         car.czas_dni = data["czas_dni"]
         car.czas_godzin = data["czas_godzin"]
-        car.maxkm = data["maksymalna_podroz"]
+        car.base_maxkm = data["base_maxkm"]
+        car.base_fuel_consumption = data.get("base_fuel_consumption", 0.1)
         car.occurred_events = set(data.get("occurred_events", []))
         car.ostatni_postoj = data["ostatni_postoj"]
+        car.kasa = data["kasa"]
+        car.pakiety_naprawcze = data["pakiety_naprawcze"]
         return car
+
 
 class Lokacja:
     def __init__(self, name, type_, description, options, bonus=None):
@@ -229,21 +279,23 @@ class Lokacja:
         self.bonus = bonus or {}
 
     def pokaz(self):
-        print(f"\n🗺️ {self.name} ({self.type})")
+        print(f"\n🌍 {self.name} ({self.type})")
         print(self.description)
         if self.options:
             print(f"Dostępne opcje: {', '.join(self.options)}\n")
         else:
             print("Nie ma tu nic ciekawego...\n")
 
+
 def wygeneruj_lokacje():
     with open("utils/locations.json", "r", encoding="utf-8") as f:
         dane_lokacji = json.load(f)
-    dane = random.choice(dane_lokacji)
+
+    losowa_lokacja = random.choice(dane_lokacji)
     return Lokacja(
-        name=dane["name"],
-        type_=dane["type"],
-        description=dane["description"],
-        options=dane["options"],
-        bonus=dane.get("bonus", {})
+        name=losowa_lokacja["name"],
+        type_=losowa_lokacja["type"],
+        description=losowa_lokacja["description"],
+        options=losowa_lokacja.get("options", []),
+        bonus=losowa_lokacja.get("bonus", {})
     )
