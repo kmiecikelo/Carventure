@@ -339,11 +339,12 @@ class Car:
         print(f"🚀 Zasięg: {self.get_current_maxkm()} km")
         print(f"🔥 Spalanie: {self.get_current_fuel_consumption() * 100:.1f}L/100km")
         print(f"🧰 Pakiety naprawcze: {self.pakiety_naprawcze}")
-        print(f"💰 Kasa: {self.kasa} zł")
+        print(f"💰 Kasa: {self.kasa:.2f} zł")
         print(f"🎒 Przedmioty: {len(self.inventory)}")
         print(f"🛠️ Usterki: {self.liczbausterek}")
-        print(f"🌤️ Dzień {self.czas_dni}, godzina {self.czas_godzin}:00")
-
+        print(f"\n🌤️ Aktualna godzina: ", end="")
+        self.pokaz_czas_dnia()
+        print()
         if self.buffs:
             print("\nAktywne bonusy:")
             for buff in self.buffs:
@@ -354,10 +355,6 @@ class Car:
             print("\nAktualne problemy:")
             for debuff in self.debuffs:
                 print(f"- {debuff['description']}")
-
-        print(f"\nAktualna godzina: ", end="")
-        self.pokaz_czas_dnia()
-        print()
 
     def to_dict(self):
         return {
