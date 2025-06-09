@@ -198,6 +198,7 @@ class Car:
         zuzycie = km * current_consumption
         fluktuacja = random.gauss(1.0, 0.1)  # średnia 1.0, odchylenie 0.1
         zarobek = (km / 5) * fluktuacja
+        self.kasa += zarobek
 
         if self.debuffs:
             print("\n⚠️ Uwaga! Samochód ma następujące problemy:")
