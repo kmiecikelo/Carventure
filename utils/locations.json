@@ -1,26 +1,32 @@
 [
   {
     "name": "Stacja benzynowa",
-    "type": "stacja",
-    "description": "Stara stacja z jednym dystrybutorem.",
-    "options": ["tankowanie"]
+    "type": "Stacja paliw",
+    "description": "Mała stacja benzynowa na uboczu. Można tu zatankować i coś zjeść.",
+    "options": ["tankowanie", "handel"],
+    "bonus": {
+      "fuel_price": 0.9
+    }
   },
   {
-    "name": "Warsztat",
-    "type": "warsztat",
-    "description": "Mały warsztat w lesie. Pachnie ropą.",
-    "options": ["naprawa"]
+    "name": "Warsztat samochodowy",
+    "type": "Warsztat",
+    "description": "Podstawowy warsztat z narzędziami. Można tu naprawić auto.",
+    "options": ["naprawa"],
+    "bonus": {
+      "repair_discount": 0.8
+    }
   },
   {
-    "name": "Pustkowie",
-    "type": "nic",
-    "description": "Tylko kurz i wiatr...",
-    "options": []
-  },
-  {
-    "name": "Miasto",
-    "type": "miasto",
-    "description": "Ruchliwe miasto z wieloma możliwościami.",
+    "name": "Małe miasteczko",
+    "type": "Miejscowość",
+    "description": "Spokojne miasteczko z kilkoma sklepami i warsztatem.",
     "options": ["tankowanie", "naprawa", "handel"]
+  },
+  {
+    "name": "Pusty parking",
+    "type": "Postój",
+    "description": "Opuszczony parking przy drodze. Można tu odpocząć.",
+    "options": []
   }
 ]

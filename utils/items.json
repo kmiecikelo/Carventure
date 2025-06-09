@@ -1,0 +1,49 @@
+{
+  "items": [
+    {
+      "id": "repair_kit",
+      "name": "Zestaw naprawczy",
+      "description": "Naprawia wszystkie usterki w pojeździe",
+      "price": 150,
+      "type": "usable",
+      "effect": {
+        "action": "repair_all"
+      }
+    },
+    {
+      "id": "fuel_can",
+      "name": "Kanister z paliwem",
+      "description": "Dodaje 10L paliwa do baku",
+      "price": 80,
+      "type": "usable",
+      "effect": {
+        "action": "add_fuel",
+        "amount": 10
+      }
+    },
+    {
+      "id": "spare_part",
+      "name": "Część zamienna",
+      "description": "Zmniejsza szansę na awarię o 10% na 200km",
+      "price": 120,
+      "type": "buff",
+      "effect": {
+        "action": "reduce_breakdown_chance",
+        "value": 0.9,
+        "duration": 200
+      }
+    },
+    {
+      "id": "premium_fuel",
+      "name": "Paliwo premium",
+      "description": "Zmniejsza spalanie o 15% na 300km",
+      "price": 200,
+      "type": "buff",
+      "effect": {
+        "action": "reduce_consumption",
+        "value": 0.85,
+        "duration": 300
+      }
+    }
+  ]
+}
